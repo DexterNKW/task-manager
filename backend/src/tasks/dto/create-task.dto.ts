@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsISO8601 } from 'class-validator';
 import { Transform } from 'class-transformer';
 
 export class CreateTaskDto {
@@ -6,4 +6,8 @@ export class CreateTaskDto {
   @IsString()
   @IsNotEmpty()
   title: string;
+
+  @IsOptional()
+  @IsISO8601()
+  dueDate?: string;
 }

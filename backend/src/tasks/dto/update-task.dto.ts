@@ -13,4 +13,8 @@ export class UpdateTaskDto {
   @IsOptional()
   @IsISO8601()
   createdAt?: string;
+
+  @IsOptional()
+  @IsISO8601()
+  dueDate?: string | null;
 }
