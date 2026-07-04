@@ -1,8 +1,9 @@
 # Backend
-backend/*.db
+backend/data/*.db
+backend/.env.local.example
 
 # Frontend
-frontend/.env*.local
+frontend/.env.local.example
 
 # pasted from backend (backend/.gitignore)
 
