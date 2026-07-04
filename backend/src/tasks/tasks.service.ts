@@ -1,5 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import Database from 'better-sqlite3';
+import { existsSync, mkdirSync } from 'fs';
+import { dirname } from 'path';
 import { Task } from './entities/task.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
@@ -19,6 +21,8 @@ export class TasksService {
   private db: Database.Database;
 
   constructor() {
+    const dbDir = dirname(dbPath);
+    if (!existsSync(dbDir)) mkdirSync(dbDir, { recursive: true });
     this.db = new Database(dbPath);
     this.db.exec(`
       CREATE TABLE IF NOT EXISTS tasks (
