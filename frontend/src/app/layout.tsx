@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Task Manager",
-  description: "Gestione task full-stack",
+  description: "Full-stack task management",
 };
 
 export default function RootLayout({
