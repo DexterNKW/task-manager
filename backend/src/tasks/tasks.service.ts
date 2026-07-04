@@ -4,6 +4,8 @@ import { Task } from './entities/task.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 
+const dbPath = process.env.DB_PATH || './data/tasks.db';
+
 interface TaskRow {
   id: number;
   title: string;
@@ -17,7 +19,7 @@ export class TasksService {
   private db: Database.Database;
 
   constructor() {
-    this.db = new Database('tasks.db');
+    this.db = new Database(dbPath);
     this.db.exec(`
       CREATE TABLE IF NOT EXISTS tasks (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
