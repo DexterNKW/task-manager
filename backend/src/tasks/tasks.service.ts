@@ -72,7 +72,6 @@ export class TasksService {
 
     const title = dto.title ?? task.title;
     const completed = dto.completed ?? task.completed;
-    const createdAt = dto.createdAt ? new Date(dto.createdAt) : task.createdAt;
     let dueDate: Date | null;
     if (dto.dueDate === undefined) {
       dueDate = task.dueDate ?? null;
@@ -82,8 +81,15 @@ export class TasksService {
       dueDate = new Date(dto.dueDate);
     }
     this.db
-      .prepare('UPDATE tasks SET title = ?, completed = ?, createdAt = ?, dueDate = ? WHERE id = ?')
-      .run(title, completed ? 1 : 0, createdAt.toISOString(), dueDate ? dueDate.toISOString() : null, id);
+      .prepare(
+        'UPDATE tasks SET title = ?, completed = ?, dueDate = ? WHERE id = ?',
+      )
+      .run(
+        title,
+        completed ? 1 : 0,
+        dueDate ? dueDate.toISOString() : null,
+        id,
+      );
 
     return this.findOne(id);
   }
