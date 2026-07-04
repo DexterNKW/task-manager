@@ -130,52 +130,55 @@ export default function Home() {
   }
 
   return (
-    <main className="max-w-2xl mx-auto mt-12 px-4 pb-12">
-      <h1 className="text-3xl font-bold mb-8 text-gray-800">Task Manager</h1>
+    <main className="max-w-2xl mx-auto my-12 px-4">
+      <div className="bg-white border border-gray-200 rounded-lg shadow-sm px-6 py-8">
+        <h1 className="text-3xl font-bold mb-1 text-gray-800">Task Manager</h1>
+        <p className="text-sm text-gray-500 mb-8">Manage your daily tasks in one place.</p>
 
-      <TaskForm
-        title={newTitle}
-        dueDate={newDueDate}
-        submitting={submitting}
-        onTitleChange={setNewTitle}
-        onDueDateChange={setNewDueDate}
-        onSubmit={handleAddTask}
-      />
+        <TaskForm
+          title={newTitle}
+          dueDate={newDueDate}
+          submitting={submitting}
+          onTitleChange={setNewTitle}
+          onDueDateChange={setNewDueDate}
+          onSubmit={handleAddTask}
+        />
 
-      {error && (
-        <p className="text-red-600 bg-red-50 border border-red-200 rounded-md px-3 py-2 mb-4 text-sm">
-          Error: {error}
-        </p>
-      )}
+        {error && (
+          <p className="text-red-600 bg-red-50 border border-red-200 rounded-md px-3 py-2 mb-4 text-sm">
+            Error: {error}
+          </p>
+        )}
 
-      <FilterBar filter={filter} onChange={setFilter} />
+        <FilterBar filter={filter} onChange={setFilter} />
 
-      {loading ? (
-        <p className="text-gray-500 text-sm">Loading...</p>
-      ) : tasks.length === 0 ? (
-        <p className="text-gray-500 text-sm">No tasks present.</p>
-      ) : filteredTasks.length === 0 ? (
-        <p className="text-gray-500 text-sm">No tasks match this filter.</p>
-      ) : (
-        <ul className="space-y-2">
-          {filteredTasks.map((task) => (
-            <TaskItem
-              key={task.id}
-              task={task}
-              isEditing={editingId === task.id}
-              editTitle={editTitle}
-              editDueDate={editDueDate}
-              onEditTitleChange={setEditTitle}
-              onEditDueDateChange={setEditDueDate}
-              onStartEditing={startEditing}
-              onCancelEditing={cancelEditing}
-              onSaveEdit={handleSaveEdit}
-              onToggle={handleToggle}
-              onDelete={handleDelete}
-            />
-          ))}
-        </ul>
-      )}
+        {loading ? (
+          <p className="text-gray-500 text-sm">Loading...</p>
+        ) : tasks.length === 0 ? (
+          <p className="text-gray-500 text-sm">No tasks present.</p>
+        ) : filteredTasks.length === 0 ? (
+          <p className="text-gray-500 text-sm">No tasks match this filter.</p>
+        ) : (
+          <ul className="space-y-2">
+            {filteredTasks.map((task) => (
+              <TaskItem
+                key={task.id}
+                task={task}
+                isEditing={editingId === task.id}
+                editTitle={editTitle}
+                editDueDate={editDueDate}
+                onEditTitleChange={setEditTitle}
+                onEditDueDateChange={setEditDueDate}
+                onStartEditing={startEditing}
+                onCancelEditing={cancelEditing}
+                onSaveEdit={handleSaveEdit}
+                onToggle={handleToggle}
+                onDelete={handleDelete}
+              />
+            ))}
+          </ul>
+        )}
+      </div>
     </main>
   );
 }
