@@ -40,12 +40,15 @@ export class TasksService {
   }
 
   findAll(): Task[] {
-    const rows = this.db.prepare('SELECT * FROM tasks ORDER BY dueDate IS NULL, dueDate ASC').all() as TaskRow[];
+    const rows = this.db
+      .prepare('SELECT * FROM tasks ORDER BY dueDate IS NULL, dueDate ASC')
+      .all() as TaskRow[];
     return rows.map((r) => this.toTask(r));
   }
 
   findOne(id: number): Task {
-    const row = this.db.prepare('SELECT * FROM tasks WHERE id = ?').get(id) as TaskRow | undefined;
+    const row = this.db.prepare('SELECT * FROM tasks WHERE id = ?').get(id) as
+      TaskRow | undefined;
     if (!row) throw new NotFoundException(`Task ${id} not found`);
     return this.toTask(row);
   }
@@ -65,7 +68,7 @@ export class TasksService {
   }
 
   update(id: number, dto: UpdateTaskDto): Task {
-    const task = this.findOne(id); 
+    const task = this.findOne(id);
 
     const title = dto.title ?? task.title;
     const completed = dto.completed ?? task.completed;
