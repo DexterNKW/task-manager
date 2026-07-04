@@ -10,7 +10,7 @@ interface Task {
   dueDate: string | null;
 }
 
-const API_URL = "http://localhost:3000/api/tasks";
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3000/api/tasks";
 
 type Filter = "all" | "active" | "completed";
 
