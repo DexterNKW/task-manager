@@ -9,7 +9,7 @@ A full-stack task management app: a NestJS + SQLite backend exposing a REST API,
 
 ## Project structure
 
-```
+```text
 task-manager/
 ├── backend/   # NestJS REST API
 └── frontend/  # Next.js UI
@@ -26,52 +26,50 @@ task-manager/
 ```bash
 cd backend
 npm install
-cp .env.local.example .env.local   # optional, defaults work out of the box
 npm run start:dev
 ```
 
-The API starts on `http://localhost:3000` (or `PORT` if set) and creates a SQLite database file on first run.
+No `.env` file is required — every variable below has a working default. The API starts on `http://localhost:3000` (or `PORT` if set) and creates the SQLite database file (and its parent directory) on first run.
 
 ### 2. Frontend
 
 ```bash
 cd frontend
 npm install
-cp .env.local.example .env.local   # optional, defaults work out of the box
 npm run dev
 ```
 
-The app starts on `http://localhost:3001` (Next.js will pick the next free port if 3000 is taken by the backend) and expects the API to be reachable at the URL configured in `NEXT_PUBLIC_API_URL`.
+No `.env` file is required here either. The app starts on `http://localhost:3001` (Next.js will pick the next free port if 3000 is taken by the backend) and expects the API to be reachable at the URL configured by `NEXT_PUBLIC_API_URL`, falling back to `http://localhost:3000/api/tasks`.
 
 Open the printed local URL in your browser to use the app.
 
 ## Environment variables
 
-Both apps ship a `.env.local.example` file documenting the variables they read. Copy it to `.env.local` and adjust as needed — `.env.local` files (including the `.example` ones) are intentionally not committed to the repository.
+Both apps read all configuration from environment variables with sensible local defaults, so nothing needs to be set up to run them. To override a default, create a `.env.local` file in the relevant app folder (`.env*` files are intentionally not committed to this repository, so there is no example file to copy — just create it from scratch with the variables you need from the tables below).
 
-### Backend (`backend/.env.local.example`)
+### Backend
 
-| Variable  | Default               | Description                          |
-|-----------|------------------------|--------------------------------------|
-| `PORT`    | `3000`                 | Port the API listens on              |
-| `DB_PATH` | `./data/tasks.db`      | Path to the SQLite database file     |
+| Variable | Default | Description |
+| - | - | - |
+| `PORT` | `3000` | Port the API listens on |
+| `DB_PATH` | `./data/tasks.db` | Path to the SQLite database file |
 
-### Frontend (`frontend/.env.local.example`)
+### Frontend
 
-| Variable               | Default                              | Description                  |
-|-------------------------|---------------------------------------|-------------------------------|
-| `NEXT_PUBLIC_API_URL`  | `http://localhost:3000/api/tasks`     | Base URL of the tasks API     |
+| Variable | Default | Description |
+| - | - | - |
+| `NEXT_PUBLIC_API_URL` | `http://localhost:3000/api/tasks` | Base URL of the tasks API |
 
 ## API reference
 
 Base path: `/api/tasks`
 
-| Method | Path              | Body                                              | Description                     |
-|--------|-------------------|----------------------------------------------------|----------------------------------|
-| GET    | `/api/tasks`      | —                                                  | List all tasks                  |
-| POST   | `/api/tasks`      | `{ title: string, dueDate?: string \| null }`      | Create a task                   |
-| PUT    | `/api/tasks/:id`  | `{ title?, completed?, dueDate? }` (all optional)  | Update a task                   |
-| DELETE | `/api/tasks/:id`  | —                                                  | Delete a task                   |
+| Method | Path | Body | Description |
+| - | - | - | - |
+| GET | `/api/tasks` | — | List all tasks |
+| POST | `/api/tasks` | `{ title: string, dueDate?: string \| null }` | Create a task |
+| PUT | `/api/tasks/:id` | `{ title?, completed?, dueDate? }` (all optional) | Update a task |
+| DELETE | `/api/tasks/:id` | — | Delete a task |
 
 Errors are returned in a uniform shape:
 
@@ -97,4 +95,4 @@ npm run test:e2e    # end-to-end tests (full CRUD flow against an in-memory data
 ## Notes
 
 - CORS on the backend is restricted to `http://localhost:3001` (see `backend/src/main.ts`); update it if you run the frontend on a different origin.
-- The SQLite database file is created automatically on first backend start; no migrations are needed for this project's scope.
+- The SQLite database file and its parent directory are created automatically on first backend start (including on a fresh clone); no migrations are needed for this project's scope.
