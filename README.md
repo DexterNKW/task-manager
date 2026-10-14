@@ -95,6 +95,15 @@ npm test            # unit tests
 npm run test:e2e    # end-to-end tests (full CRUD flow against an in-memory database)
 ```
 
+Static checks, available in both `backend/` and `frontend/`:
+
+```bash
+npm run typecheck   # TypeScript without emitting
+npm run lint        # ESLint (in backend/ this applies fixes; use npm run lint:check to only report)
+```
+
+CI (`.github/workflows/ci.yml`) runs lint, type check, tests and build for both apps on every push to `index` and on every pull request.
+
 ## Notes
 
 - CORS on the backend is restricted to `http://localhost:3001` (see `backend/src/main.ts`); update it if you run the frontend on a different origin.
