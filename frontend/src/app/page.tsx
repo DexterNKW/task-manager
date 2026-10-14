@@ -32,12 +32,6 @@ export default function Home() {
   });
 
   useEffect(() => {
-    fetchTasks();
-  }, []);
-
-  function fetchTasks() {
-    setLoading(true);
-    setError(null);
     fetch(API_URL)
       .then((res) => {
         if (!res.ok) throw new Error("Error loading tasks");
@@ -46,7 +40,7 @@ export default function Home() {
       .then((data: Task[]) => setTasks(data))
       .catch((err: Error) => setError(err.message))
       .finally(() => setLoading(false));
-  }
+  }, []);
 
   async function handleAddTask(e: React.FormEvent) {
     e.preventDefault();

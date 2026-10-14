@@ -11,16 +11,15 @@ describe('TasksService database path', () => {
 
     process.env.DB_PATH = dbPath;
     jest.resetModules();
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const { TasksService } = require('./tasks.service');
-    const service = new (TasksService as new () => {
-      db: { close: () => void };
-    })();
+
+    const { TasksService } =
+      jest.requireActual<typeof import('./tasks.service')>('./tasks.service');
+    const service = new TasksService();
 
     expect(existsSync(dbDir)).toBe(true);
     expect(existsSync(dbPath)).toBe(true);
 
-    service.db.close();
+    (service as unknown as { db: { close: () => void } }).db.close();
     rmSync(testRoot, { recursive: true, force: true });
     delete process.env.DB_PATH;
   });

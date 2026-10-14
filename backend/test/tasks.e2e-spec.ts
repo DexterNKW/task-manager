@@ -16,7 +16,9 @@ describe('Tasks (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
+    app.useGlobalPipes(
+      new ValidationPipe({ whitelist: true, transform: true }),
+    );
     app.useGlobalFilters(new HttpExceptionFilter());
     await app.init();
   });
@@ -35,7 +37,7 @@ describe('Tasks (e2e)', () => {
       title: 'Buy milk',
       completed: false,
     });
-    const taskId = createRes.body.id;
+    const taskId = (createRes.body as { id: number }).id;
 
     await request(app.getHttpServer())
       .get('/api/tasks')
@@ -70,8 +72,8 @@ describe('Tasks (e2e)', () => {
 
     expect(res.body).toMatchObject({
       statusCode: 404,
-      error: expect.any(String),
-      message: expect.any(String),
+      error: expect.any(String) as string,
+      message: expect.any(String) as string,
       path: '/api/tasks/999',
     });
   });

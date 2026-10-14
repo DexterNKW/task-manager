@@ -62,7 +62,9 @@ export class TasksService {
   create(dto: CreateTaskDto): Task {
     const createdAt = new Date().toISOString();
     const result = this.db
-      .prepare('INSERT INTO tasks (title, completed, createdAt, dueDate) VALUES (?, 0, ?, ?)')
+      .prepare(
+        'INSERT INTO tasks (title, completed, createdAt, dueDate) VALUES (?, 0, ?, ?)',
+      )
       .run(dto.title, createdAt, dto.dueDate ? dto.dueDate : null);
     return {
       id: result.lastInsertRowid as number,
@@ -102,6 +104,7 @@ export class TasksService {
 
   remove(id: number): void {
     const result = this.db.prepare('DELETE FROM tasks WHERE id = ?').run(id);
-    if (result.changes === 0) throw new NotFoundException(`Task ${id} not found`);
+    if (result.changes === 0)
+      throw new NotFoundException(`Task ${id} not found`);
   }
 }
