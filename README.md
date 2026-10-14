@@ -39,7 +39,7 @@ npm install
 npm run dev
 ```
 
-No `.env` file is required here either. The app starts on `http://localhost:3001` (Next.js will pick the next free port if 3000 is taken by the backend) and expects the API to be reachable at the URL configured by `NEXT_PUBLIC_API_URL`, falling back to `http://localhost:3000/api/tasks`.
+No `.env` file is required here either. The app starts on `http://localhost:3001` (Next.js will pick the next free port if 3000 is taken by the backend) and expects the API to be reachable at the URL configured by `NEXT_PUBLIC_API_URL`, falling back to `http://localhost:3000`.
 
 Open the printed local URL in your browser to use the app.
 
@@ -64,7 +64,7 @@ Both apps read all configuration from environment variables with sensible local 
 
 | Variable | Default | Description |
 | - | - | - |
-| `NEXT_PUBLIC_API_URL` | `http://localhost:3000/api/tasks` | Base URL of the tasks API |
+| `NEXT_PUBLIC_API_URL` | `http://localhost:3000` | Base URL of the backend API (the app calls `/api/auth/*` and `/api/tasks` under it) |
 
 ## API reference
 
@@ -127,6 +127,7 @@ CI (`.github/workflows/ci.yml`) runs lint, type check, tests and build for both 
 
 ## Notes
 
+- The web app keeps the access token in `localStorage` and returns to the sign-in screen when the API answers `401` (for example after the token expires). Storing the token there is simple but readable by any script on the page, so the app must stay free of XSS (React escapes rendered values; never inject raw HTML).
 - CORS on the backend is restricted to `http://localhost:3001` (see `backend/src/main.ts`); update it if you run the frontend on a different origin.
 - The schema lives in `backend/prisma/schema.prisma` and its history in `backend/prisma/migrations`. After changing the schema, run `npm run db:migrate -- --name <change>` from `backend/` to create and apply a new migration.
 - `npm run start`, `start:dev` and `start:prod` run `prisma migrate deploy` first, so pending migrations are applied automatically.
