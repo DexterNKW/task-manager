@@ -1,16 +1,19 @@
-process.env.DB_PATH = ':memory:';
-
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import request from 'supertest';
 import { App } from 'supertest/types';
 import { AppModule } from './../src/app.module';
 import { HttpExceptionFilter } from './../src/common/filters/http-exception.filter';
+import { createTestDatabase, TestDatabase } from './support/test-database';
 
 describe('Tasks (e2e)', () => {
   let app: INestApplication<App>;
+  let database: TestDatabase;
 
   beforeEach(async () => {
+    database = createTestDatabase();
+    process.env.DATABASE_URL = database.url;
+
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
@@ -25,6 +28,8 @@ describe('Tasks (e2e)', () => {
 
   afterEach(async () => {
     await app.close();
+    delete process.env.DATABASE_URL;
+    database.remove();
   });
 
   it('performs a full create -> read -> update -> delete cycle', async () => {

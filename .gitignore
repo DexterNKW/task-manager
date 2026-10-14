@@ -17,6 +17,9 @@ frontend/build/
 *.tsbuildinfo
 frontend/next-env.d.ts
 
+# Generated code
+backend/src/generated/
+
 # Local databases
 backend/data/
 

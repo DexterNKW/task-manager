@@ -4,7 +4,7 @@ A full-stack task management app: a NestJS + SQLite backend exposing a REST API,
 
 ## Stack
 
-- **Backend**: NestJS 11, SQLite (`better-sqlite3`), class-validator/class-transformer, Jest
+- **Backend**: NestJS 11, Prisma ORM 7 on SQLite (`better-sqlite3` driver adapter), class-validator/class-transformer, Jest
 - **Frontend**: Next.js 16 (App Router), React 19, Tailwind CSS v4, TypeScript, Vitest
 
 ## Project structure
@@ -17,7 +17,7 @@ task-manager/
 
 ## Prerequisites
 
-- Node.js 22 (pinned in `.nvmrc`) and npm
+- Node.js 22.18 or later (pinned to 22 in `.nvmrc`) and npm
 
 ## Getting started
 
@@ -29,7 +29,7 @@ npm install
 npm run start:dev
 ```
 
-No `.env` file is required — every variable below has a working default. The API starts on `http://localhost:3000` (or `PORT` if set) and creates the SQLite database file (and its parent directory) on first run.
+No `.env` file is required — every variable below has a working default. The API starts on `http://localhost:3000` (or `PORT` if set) and applies the database migrations before starting, which also creates the SQLite database file (and its parent directory) on first run. `npm install` generates the Prisma client into `src/generated/prisma` (not committed).
 
 ### 2. Frontend
 
@@ -55,7 +55,7 @@ Both apps read all configuration from environment variables with sensible local 
 | Variable | Default | Description |
 | - | - | - |
 | `PORT` | `3000` | Port the API listens on |
-| `DB_PATH` | `./data/tasks.db` | Path to the SQLite database file |
+| `DATABASE_URL` | `file:./data/tasks.db` | SQLite database URL, relative to `backend/` |
 
 ### Frontend
 
@@ -92,7 +92,7 @@ Run from `backend/`:
 
 ```bash
 npm test            # unit tests
-npm run test:e2e    # end-to-end tests (full CRUD flow against an in-memory database)
+npm run test:e2e    # end-to-end tests (full CRUD flow against a temporary database)
 ```
 
 Run from `frontend/`:
@@ -113,4 +113,10 @@ CI (`.github/workflows/ci.yml`) runs lint, type check, tests and build for both 
 ## Notes
 
 - CORS on the backend is restricted to `http://localhost:3001` (see `backend/src/main.ts`); update it if you run the frontend on a different origin.
-- The SQLite database file and its parent directory are created automatically on first backend start (including on a fresh clone); no migrations are needed for this project's scope.
+- The schema lives in `backend/prisma/schema.prisma` and its history in `backend/prisma/migrations`. After changing the schema, run `npm run db:migrate -- --name <change>` from `backend/` to create and apply a new migration.
+- `npm run start`, `start:dev` and `start:prod` run `prisma migrate deploy` first, so pending migrations are applied automatically.
+- **Upgrading a database created before the Prisma migration** (the `tasks` table already exists): mark the initial migration as applied once, from `backend/`:
+
+  ```bash
+  npx prisma migrate resolve --applied 20261014005643_init
+  ```
