@@ -5,7 +5,7 @@ A full-stack task management app: a NestJS + SQLite backend exposing a REST API,
 ## Stack
 
 - **Backend**: NestJS 11, SQLite (`better-sqlite3`), class-validator/class-transformer, Jest
-- **Frontend**: Next.js 16 (App Router), React 19, Tailwind CSS v4, TypeScript
+- **Frontend**: Next.js 16 (App Router), React 19, Tailwind CSS v4, TypeScript, Vitest
 
 ## Project structure
 
@@ -93,6 +93,12 @@ Run from `backend/`:
 ```bash
 npm test            # unit tests
 npm run test:e2e    # end-to-end tests (full CRUD flow against an in-memory database)
+```
+
+Run from `frontend/`:
+
+```bash
+npm test            # unit tests (Vitest)
 ```
 
 Static checks, available in both `backend/` and `frontend/`:

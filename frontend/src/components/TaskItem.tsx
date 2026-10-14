@@ -1,5 +1,6 @@
 "use client";
 
+import { formatDueDate } from "@/lib/due-date";
 import type { Task } from "@/types";
 
 interface TaskItemProps {
@@ -86,7 +87,7 @@ export function TaskItem({
             {task.title}
           </span>
           <span className="text-xs text-gray-400 whitespace-nowrap">
-            {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : "No due date"}
+            {task.dueDate ? formatDueDate(task.dueDate) : "No due date"}
           </span>
           <button
             onClick={() => onStartEditing(task)}

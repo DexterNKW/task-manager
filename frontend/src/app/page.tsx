@@ -4,13 +4,10 @@ import { useEffect, useState } from "react";
 import { FilterBar, type Filter } from "@/components/FilterBar";
 import { TaskForm } from "@/components/TaskForm";
 import { TaskItem } from "@/components/TaskItem";
+import { toDateInputValue } from "@/lib/due-date";
 import type { Task } from "@/types";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3000/api/tasks";
-
-function toDateInputValue(dueDate: string | null): string {
-  return dueDate ? dueDate.slice(0, 10) : "";
-}
 
 export default function Home() {
   const [tasks, setTasks] = useState<Task[]>([]);
