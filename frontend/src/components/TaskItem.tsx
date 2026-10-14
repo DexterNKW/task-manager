@@ -42,12 +42,14 @@ export function TaskItem({
         <>
           <input
             type="text"
+            aria-label="Task title"
             value={editTitle}
             onChange={(e) => onEditTitleChange(e.target.value)}
             className="flex-1 border border-gray-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <input
             type="date"
+            aria-label="Due date"
             value={editDueDate}
             onChange={(e) => onEditDueDateChange(e.target.value)}
             className="border border-gray-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -75,6 +77,7 @@ export function TaskItem({
         <>
           <input
             type="checkbox"
+            aria-label={`Mark "${task.title}" as ${task.completed ? "not completed" : "completed"}`}
             checked={task.completed}
             onChange={() => onToggle(task)}
             className="h-4 w-4 accent-blue-600"

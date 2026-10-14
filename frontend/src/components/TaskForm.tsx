@@ -21,6 +21,7 @@ export function TaskForm({
     <form onSubmit={onSubmit} className="flex gap-2 mb-6">
       <input
         type="text"
+        aria-label="Task title"
         value={title}
         onChange={(e) => onTitleChange(e.target.value)}
         placeholder="New task..."
@@ -28,6 +29,7 @@ export function TaskForm({
       />
       <input
         type="date"
+        aria-label="Due date"
         value={dueDate}
         onChange={(e) => onDueDateChange(e.target.value)}
         className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
