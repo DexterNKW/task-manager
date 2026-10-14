@@ -80,7 +80,7 @@ Errors are returned in a uniform shape:
 {
   "statusCode": 404,
   "message": "Task 999 not found",
-  "error": "Not Found",
+  "error": "NOT_FOUND",
   "timestamp": "2026-07-04T12:00:00.000Z",
   "path": "/api/tasks/999"
 }
