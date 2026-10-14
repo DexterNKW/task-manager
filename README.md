@@ -45,7 +45,10 @@ Open the printed local URL in your browser to use the app.
 
 ## Environment variables
 
-Both apps read all configuration from environment variables with sensible local defaults, so nothing needs to be set up to run them. To override a default, create a `.env.local` file in the relevant app folder (`.env*` files are intentionally not committed to this repository, so there is no example file to copy — just create it from scratch with the variables you need from the tables below).
+Both apps read all configuration from environment variables with sensible local defaults, so nothing needs to be set up to run them. Each app has a `.env.example` listing its variables.
+
+- **Backend**: set the variables in the shell that starts the API (for example `PORT=4000 npm run start:dev`).
+- **Frontend**: copy `frontend/.env.example` to `frontend/.env.local` and edit it; Next.js loads it automatically.
 
 ### Backend
 
