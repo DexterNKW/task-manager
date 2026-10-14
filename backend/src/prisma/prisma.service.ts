@@ -1,12 +1,18 @@
 import { Injectable, OnModuleDestroy } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3';
 import { PrismaClient } from '../generated/prisma/client';
-import { databaseUrl } from './database-url';
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleDestroy {
-  constructor() {
-    super({ adapter: new PrismaBetterSqlite3({ url: databaseUrl() }) });
+  // The URL comes from ConfigService, not process.env: values read from .env
+  // only reach process.env when they are part of the validated config.
+  constructor(config: ConfigService) {
+    super({
+      adapter: new PrismaBetterSqlite3({
+        url: config.getOrThrow<string>('DATABASE_URL'),
+      }),
+    });
   }
 
   async onModuleDestroy() {

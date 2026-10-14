@@ -1,10 +1,10 @@
 # Task Manager
 
-A full-stack task management app: a NestJS + SQLite backend exposing a REST API, and a Next.js frontend consuming it. Create tasks, set due dates, mark them complete, edit them, and filter by status.
+A full-stack task management app: a NestJS + SQLite backend exposing a REST API, and a Next.js frontend consuming it. Users register and sign in, then create tasks, set due dates, mark them complete, edit them, and filter by status. Each user only sees their own tasks.
 
 ## Stack
 
-- **Backend**: NestJS 11, Prisma ORM 7 on SQLite (`better-sqlite3` driver adapter), class-validator/class-transformer, Jest
+- **Backend**: NestJS 11, Prisma ORM 7 on SQLite (`better-sqlite3` driver adapter), JWT authentication with Passport and bcrypt, class-validator/class-transformer, Jest
 - **Frontend**: Next.js 16 (App Router), React 19, Tailwind CSS v4, TypeScript, Vitest
 
 ## Project structure
@@ -47,15 +47,18 @@ Open the printed local URL in your browser to use the app.
 
 Both apps read all configuration from environment variables with sensible local defaults, so nothing needs to be set up to run them. Each app has a `.env.example` listing its variables.
 
-- **Backend**: set the variables in the shell that starts the API (for example `PORT=4000 npm run start:dev`).
+- **Backend**: copy `backend/.env.example` to `backend/.env` and edit it; the API and the Prisma CLI both load it. Variables set in the shell take precedence.
 - **Frontend**: copy `frontend/.env.example` to `frontend/.env.local` and edit it; Next.js loads it automatically.
 
 ### Backend
 
 | Variable | Default | Description |
 | - | - | - |
+| `NODE_ENV` | `development` | `production` makes `JWT_SECRET` mandatory |
 | `PORT` | `3000` | Port the API listens on |
 | `DATABASE_URL` | `file:./data/tasks.db` | SQLite database URL, relative to `backend/` |
+| `JWT_SECRET` | random per process (development only) | Secret used to sign access tokens, at least 32 characters. Without it, tokens stop working whenever the API restarts |
+| `JWT_EXPIRES_IN_SECONDS` | `3600` | Access token lifetime |
 
 ### Frontend
 
@@ -65,11 +68,23 @@ Both apps read all configuration from environment variables with sensible local 
 
 ## API reference
 
-Base path: `/api/tasks`
+### Authentication
 
 | Method | Path | Body | Description |
 | - | - | - | - |
-| GET | `/api/tasks` | — | List all tasks |
+| POST | `/api/auth/register` | `{ email: string, password: string }` | Create an account (password 8–72 bytes). `201` with `{ accessToken, user }`, `409` if the email is taken |
+| POST | `/api/auth/login` | `{ email: string, password: string }` | `200` with `{ accessToken, user }`, `401` on wrong credentials |
+| GET | `/api/auth/me` | — | The signed-in user |
+
+`register` and `login` are limited to 10 requests per minute per client (`429` beyond that).
+
+### Tasks
+
+Every `/api/tasks` request needs an `Authorization: Bearer <accessToken>` header (`401` without a valid token). Tasks belong to the user who created them: a task of another user answers `404`, exactly like a task that does not exist.
+
+| Method | Path | Body | Description |
+| - | - | - | - |
+| GET | `/api/tasks` | — | List your tasks |
 | POST | `/api/tasks` | `{ title: string, dueDate?: string \| null }` | Create a task |
 | PUT | `/api/tasks/:id` | `{ title?, completed?, dueDate? }` (all optional) | Update a task |
 | DELETE | `/api/tasks/:id` | — | Delete a task |
@@ -119,4 +134,10 @@ CI (`.github/workflows/ci.yml`) runs lint, type check, tests and build for both 
 
   ```bash
   npx prisma migrate resolve --applied 20261014005643_init
+  ```
+
+- Tasks created before accounts existed have no owner and are hidden. To give them to a user, after that user has registered, run from `backend/` (replace the email):
+
+  ```bash
+  npx prisma db execute --stdin <<< "UPDATE tasks SET userId = (SELECT id FROM users WHERE email = 'you@example.com') WHERE userId IS NULL;"
   ```

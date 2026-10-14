@@ -9,12 +9,27 @@ datasource db {
   provider = "sqlite"
 }
 
+model User {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+  tasks        Task[]
+
+  @@map("users")
+}
+
 model Task {
   id        Int       @id @default(autoincrement())
   title     String
   completed Boolean   @default(false)
   createdAt DateTime  @default(now())
   dueDate   DateTime?
+  // Nullable so that tasks created before accounts existed survive the
+  // migration; they stay invisible until assigned to a user.
+  userId    Int?
+  user      User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([userId])
   @@map("tasks")
 }
