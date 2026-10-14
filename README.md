@@ -17,7 +17,7 @@ task-manager/
 
 ## Prerequisites
 
-- Node.js 20+ and npm
+- Node.js 22 (pinned in `.nvmrc`) and npm
 
 ## Getting started
 
